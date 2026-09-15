@@ -16,9 +16,9 @@ def create_vector_store(text):
     Create a FAISS vector store from transcript text.
     """
 
-    # --------------------------------
+
     # Split transcript
-    # --------------------------------
+
 
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000,
@@ -30,18 +30,18 @@ def create_vector_store(text):
     )
 
 
-    # --------------------------------
+  
     # Create embeddings
-    # --------------------------------
+ 
 
     embeddings = HuggingFaceEmbeddings(
         model_name="sentence-transformers/all-MiniLM-L6-v2"
     )
 
 
-    # --------------------------------
+ 
     # Create FAISS vector store
-    # --------------------------------
+  
 
     vector_store = FAISS.from_documents(
         documents,
