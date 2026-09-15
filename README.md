@@ -20,8 +20,6 @@ an answer with an LLM.
 - 🤖 Groq LLM
 - 💬 Ask questions about the video
 - ▶️ Preview the YouTube video
-- 📚 Conversation history
-- 🌐 Deployable on Render
 
 ---
 
