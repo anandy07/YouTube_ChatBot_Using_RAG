@@ -103,18 +103,3 @@ if st.session_state.video_id:
 
             except Exception as e:
                 st.error(f"Error generating answer: {e}")
-
-
-# Chat history
-if st.session_state.chat_history:
-
-    st.divider()
-    st.subheader("Conversation")
-
-    for chat in st.session_state.chat_history:
-
-        st.markdown(f"**You:** {chat['question']}")
-
-        st.markdown(f"**AI:** {chat['answer']}")
-
-        st.divider()
