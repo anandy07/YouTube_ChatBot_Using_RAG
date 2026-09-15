@@ -20,39 +20,28 @@ def answer_question(
     and generate an answer using Groq.
     """
 
-    # --------------------------------
     # Retrieve relevant documents
-    # --------------------------------
 
     documents = vector_store.similarity_search(
         question,
         k=4
     )
 
-
-    # --------------------------------
     # Create context
-    # --------------------------------
 
     context = "\n\n".join(
         document.page_content
         for document in documents
     )
 
-
-    # --------------------------------
     # Groq LLM
-    # --------------------------------
 
     llm = ChatGroq(
         model="openai/gpt-oss-120b",
         temperature=0
     )
 
-
-    # --------------------------------
     # Prompt
-    # --------------------------------
 
     prompt = PromptTemplate(
         template="""
@@ -89,20 +78,14 @@ Answer:
         ]
     )
 
-
-    # --------------------------------
     # Create final prompt
-    # --------------------------------
 
     final_prompt = prompt.format(
         context=context,
         question=question
     )
 
-
-    # --------------------------------
     # Generate response
-    # --------------------------------
 
     response = llm.invoke(
         final_prompt
