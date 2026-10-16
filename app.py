@@ -33,20 +33,16 @@ youtube_url = st.text_input(
 
 # Process video
 if st.button("Process Video"):
-
     if not youtube_url:
         st.warning("Please enter a YouTube URL.")
-
     else:
         video_id = get_video_id(youtube_url)
 
         if not video_id:
             st.error("Invalid YouTube URL.")
-
         else:
             try:
                 with st.spinner("Processing video..."):
-
                     transcript = get_transcript(video_id)
 
                     if not transcript:
@@ -59,20 +55,15 @@ if st.button("Process Video"):
                         st.session_state.chat_history = []
 
                         st.success("Video processed successfully!")
-
             except Exception as e:
                 st.error(f"Error processing video: {e}")
 
 
 # Show video
 if st.session_state.video_id:
-
-    st.video(
-        f"https://www.youtube.com/watch?v={st.session_state.video_id}"
-    )
+    st.video(f"https://www.youtube.com/watch?v={st.session_state.video_id}")
 
     st.divider()
-
     st.subheader("Ask a Question")
 
     question = st.text_input(
@@ -81,25 +72,26 @@ if st.session_state.video_id:
     )
 
     if st.button("Ask AI"):
-
         if not question:
             st.warning("Please enter a question.")
-
         else:
             try:
                 with st.spinner("Thinking..."):
-
                     answer = answer_question(
                         st.session_state.vector_store,
                         question
                     )
 
                 st.session_state.chat_history.append(
-                    {
-                        "question": question,
-                        "answer": answer
-                    }
+                    {"question": question, "answer": answer}
                 )
-
             except Exception as e:
                 st.error(f"Error generating answer: {e}")
+
+    # Chat history (newest first)
+    for chat in reversed(st.session_state.chat_history):
+        with st.chat_message("user"):
+            st.write(chat["question"])
+
+        with st.chat_message("assistant"):
+            st.write(chat["answer"])

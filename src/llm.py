@@ -1,50 +1,13 @@
-from langchain_groq import ChatGroq
-
-from langchain_core.prompts import (
-    PromptTemplate
-)
-
 from dotenv import load_dotenv
+from langchain_core.prompts import PromptTemplate
+from langchain_groq import ChatGroq
 
 
 # Load environment variables
 load_dotenv()
 
 
-def answer_question(
-    vector_store,
-    question
-):
-    """
-    Retrieve relevant transcript chunks
-    and generate an answer using Groq.
-    """
-
-    # Retrieve relevant documents
-
-    documents = vector_store.similarity_search(
-        question,
-        k=4
-    )
-
-    # Create context
-
-    context = "\n\n".join(
-        document.page_content
-        for document in documents
-    )
-
-    # Groq LLM
-
-    llm = ChatGroq(
-        model="openai/gpt-oss-120b",
-        temperature=0
-    )
-
-    # Prompt
-
-    prompt = PromptTemplate(
-        template="""
+PROMPT_TEMPLATE = """
 You are a helpful YouTube video assistant.
 
 Your job is to answer the user's question
@@ -70,26 +33,32 @@ User Question:
 {question}
 
 Answer:
-""",
+"""
 
-        input_variables=[
-            "context",
-            "question"
-        ]
+
+def answer_question(vector_store, question):
+    """
+    Retrieve relevant transcript chunks
+    and generate an answer using Groq.
+    """
+
+    # Retrieve relevant documents
+    documents = vector_store.similarity_search(question, k=4)
+
+    # Create context
+    context = "\n\n".join(document.page_content for document in documents)
+
+    # Groq LLM
+    llm = ChatGroq(
+        model="openai/gpt-oss-120b",
+        temperature=0
     )
 
     # Create final prompt
-
-    final_prompt = prompt.format(
-        context=context,
-        question=question
-    )
+    prompt = PromptTemplate(template=PROMPT_TEMPLATE)
+    final_prompt = prompt.format(context=context, question=question)
 
     # Generate response
-
-    response = llm.invoke(
-        final_prompt
-    )
-
+    response = llm.invoke(final_prompt)
 
     return response.content
